@@ -3,53 +3,40 @@ import { View,Text,Image,ImageBackground,TextInput,Platform,TouchableOpacity,Key
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { BorderlessButton } from 'react-native-gesture-handler';
+import api from '../../service/api';
 
 import Logo from '../../assets/logo.png';
 import Backgroud from '../../assets/backgroudhome.png';
 import styles from './styles';
 
-import { firebase } from '../../service/api';
 
 function Register(){
     const navigation = useNavigation();
     const { navigate } = useNavigation();
+    const[loading, setLoading] = useState(false);
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
+    const [employee, setEmployee] = useState('')
     const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    const [phone, setPhone] = useState('')
 
 
 
 
-    function hadleNavigateToHomePage(){
-        if (password != confirmPassword ) {
-            alert("Passwords don't match.")
-            return
-        }
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then((response) => {
-                const uid = response.user?.uid
-                const data = {
-                    id: uid,
-                    email,
-                    name,
-                };
-                const usersRef = firebase.firestore().collection('users')
-                usersRef
-                    .doc(uid)
-                    .set(data)
-                    .then(() => {
-                        navigation.navigate('SejaBv', {user: data})
-                    })
-                    .catch((error) => {
-                        alert(error)
-                    });
-            })
-            .catch((error) => {
-                alert(error)
-        });
+ async function hadleNavigateToHomePage(){
+    const data ={
+        name,
+        email,
+        password,
+        phone,
+        employee
+    };
+    try{
+        const response = await api.post('/users',data);
+        navigation.navigate('SejaBv')
+    } catch(err){
+        alert('SO MASTER PODER CRIAR USUARIOS')
+    }
     }
 
     return (
@@ -64,7 +51,7 @@ function Register(){
             </BorderlessButton>
            </View>
         <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding">
-       <View style={styles.main}>
+            <View style={styles.main}>
            <Image style={styles.mainlogo} source={Logo} />
            <View style={styles.mainInput} >
                <TextInput style={styles.mainInputText} 
@@ -73,8 +60,22 @@ function Register(){
                value={name}
                onChangeText={setName}
                />
+               <TextInput style={styles.mainInputText} 
+               placeholder="Seu cargo"
+               placeholderTextColor="#535353"
+               value={employee}
+               onChangeText={setEmployee}
+               />
+                <TextInput style={styles.mainInputText} 
+               placeholder="Seu Celular ou Whatsapp"
+               placeholderTextColor="#535353"
+               value={phone}
+               onChangeText={setPhone}
+               />
                <TextInput style={styles.mainInputText}
                placeholder="E-mail"
+               autoCapitalize="none"
+               autoCorrect={false}
                placeholderTextColor="#535353"
                value={email}
                onChangeText={setEmail}
@@ -82,16 +83,10 @@ function Register(){
                <TextInput style={styles.mainInputText}
                placeholder="Senha"
                placeholderTextColor="#535353"
+               maxLength={8}
                value={password}
                secureTextEntry={true}
                onChangeText={ setPassword}
-               />
-                <TextInput style={styles.mainInputText}
-               placeholder="Confirma senha"
-               placeholderTextColor="#535353"
-               value={confirmPassword}
-               secureTextEntry={true}
-               onChangeText={setConfirmPassword }
                />
                <View style={styles.mainInputTextEsqueceu}>
                <Text style={styles.mainInputTextEsqueceuText}>Pelo menos 6 caracteres*</Text>

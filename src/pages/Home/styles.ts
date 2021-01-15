@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
       },
       main:{
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
       },
       Viewmenu:{
        flexDirection:'row',
@@ -38,8 +38,7 @@ const styles = StyleSheet.create({
       footer:{
         justifyContent:'center',
         alignItems:'center',
-        position:'absolute',
-        top:+750,
+        marginTop:30,
       },
       footerImg:{
         width:133,

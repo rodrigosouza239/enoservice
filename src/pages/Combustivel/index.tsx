@@ -17,6 +17,10 @@ function Combustivel(){
      function hadleNavigateToCombustivelJet(){
          navigate('CombustivelJet')
          }
+
+         function hadleNavigateToCombustivelLancha (){
+             navigate('CombustivelLacha')
+         }
     return (
         <>
         <ImageBackground style={styles.container} resizeMode="cover" source={Backgroud}>
@@ -38,7 +42,7 @@ function Combustivel(){
                          Escolha a sua Embarcação
                      </Text>
                  </View>
-                 <TouchableOpacity style={styles.mainInputButton} >
+                 <TouchableOpacity onPress={hadleNavigateToCombustivelLancha} style={styles.mainInputButton} >
                          <Text style={styles.mainInputButtonText}>Lancha</Text>
                      </TouchableOpacity>
                      <TouchableOpacity onPress={hadleNavigateToCombustivelJet} style={styles.mainInputButton}>

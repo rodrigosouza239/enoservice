@@ -1,59 +1,61 @@
-import React,{ useState}  from 'react'
-import { View,Text,Image,ImageBackground,TextInput,Platform,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React,{ Component, useState}  from 'react'
+import { View, Alert, AsyncStorage, ActivityIndicator, Text,Image,ImageBackground,TextInput,Platform,TouchableOpacity,KeyboardAvoidingView, RecyclerViewBackedScrollViewBase, PushNotificationIOS } from 'react-native';
+import { StackActions, useNavigation} from '@react-navigation/native';
+
+import Api from '../../service/auth';
 
 
 import Logo from '../../assets/logo.png';
 import Backgroud from '../../assets/backgroudhome.png';
 import styles from './styles';
 
-import { firebase } from '../../service/api'
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
+import axios from 'axios';
+
 
 function Login(){
     const { navigate } = useNavigation();
-     const navigation = useNavigation();
+    const navigation = useNavigation();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
+    const[loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
-    // async function hadleNavigateToHomePage(){
-    //     firebase
-    //     .auth()
-    //     .signInWithEmailAndPassword(email, password)
-    //     .then((response) => {
-    //         const uid = response.user?.uid
-    //         const usersRef = firebase.firestore().collection('users')
-    //         usersRef
-    //             .doc(uid)
-    //             .get()
-    //             .then(firestoreDocument => {
-    //                 if (!firestoreDocument.exists) {
-    //                     alert("O usuário não existe mais.")
-    //                     return;
-    //                 }
-    //                 const user = firestoreDocument.data()
-    //                 navigation.navigate('SejaBv', {user})
-    //             })
-    //             .catch(error => {
-    //                 alert(error)
-    //             });
-    //     })
-    //     .catch(error => {
-    //         alert(error)
-    //     })
-    //     }
-    
+  const setToken = (token: string) => {
+   if(token) {
+   AsyncStorage.setItem('accessToken',token)
+   axios.defaults.headers.common.Authorization = `Bearer${token}`;
+} else{
+   AsyncStorage.removeItem('token');
+   delete axios.defaults.headers.common.Authorization;
+ }
+}
 
-    function hadleNavigateToRegisterPage(){
+const hadleNavigateToSeja = async () => {
+    setLoading(true)
+    if(email != '' && password != ''){
+        
+        let json = await Api.signIn(email,password);
+        if(json.token) {
+            navigate('SejaBv')
+        } else{
+            alert('E-mail ou senha errads')
+        }
+    } else {
+        alert( 'Preencha os campos');
+    }
+    setLoading(false);
+}
+
+
+
+        function hadleNavigateToRegisterPage(){
         navigate('Register')
         }
 
         function hadleNavigateToRecuperarPassword(){
             navigate('RecuperarPassword')
             }
-            function hadleNavigateToSeja(){
-                navigate('SejaBv')
-                }
-    
 
     return (
         <>
@@ -77,20 +79,18 @@ function Login(){
                placeholderTextColor="#535353"
                underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    maxLength={6}
                     secureTextEntry={true}
                value={password}
                onChangeText={setPassword}
                />
-               <View style={styles.mainInputTextEsqueceu}>
-               <Text onPress={hadleNavigateToRecuperarPassword} style={styles.mainInputTextEsqueceuText}>Esqueceu a senha?</Text>
-               </View>
                <TouchableOpacity onPress={hadleNavigateToSeja} style={styles.mainInputButton} >
-                   <Text style={styles.mainInputButtonText}>Entrar</Text>
+                   {loading ? (
+                         <ActivityIndicator  size="small" color="#000" />
+                   ) : (
+                    <Text style={styles.mainInputButtonText}>Entrar</Text>
+                   )}   
                </TouchableOpacity>
-               <View style={styles.footercadastro}>
-                  <Text style={styles.footercadastroText}>Não possui uma conta?</Text>
-                  <Text onPress={hadleNavigateToRegisterPage} style={styles.footercadastroText1}>REGISTRAR-SE</Text>
-               </View>
            </View>
        </View>
     </KeyboardAvoidingView >

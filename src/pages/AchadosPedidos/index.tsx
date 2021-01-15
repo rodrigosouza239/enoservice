@@ -1,5 +1,6 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { View, Text, Image, ImageBackground, TextInput, Platform, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import api from  '../../service/api';
 
 import Backgroud from '../../assets/backgroudmenu.png';
 import styles from './styles';
@@ -12,6 +13,27 @@ import { useNavigation } from '@react-navigation/native'
 
 function AchadosPedidos() {
     const navigation = useNavigation();
+    const [date, setDate] = useState('')
+    const [obs, setObs] = useState('')
+    const [entreguei, setEntreguei] = useState('')
+    const [name, setName] = useState('')
+    const [rg, setRg] = useState('')
+
+    async function hadleNavigateToSalva(){
+        const data = {
+            date,
+            obs,
+            entreguei,
+            name,
+            rg,
+          }
+       try{
+           const response = await api.post('/vessels/:vesselId/findings',data);
+           navigation.navigate('DdEmbarcacao')
+       } catch(err){
+           alert('Erro no cadastro, tente novamente.')
+       }
+       }
     return (
         <>
             <ImageBackground style={styles.container} resizeMode="cover" source={Backgroud}>
@@ -29,7 +51,11 @@ function AchadosPedidos() {
                         <Text style={styles.containerboxText} >Achados e Perdidos</Text>
                     </View>
                     <View>
-                        <TextInput   style={styles.mainInputFilds} placeholder="Data:__/__/__"
+                        <TextInput
+                        value={date}
+                        onChangeText={setDate}
+                        keyboardType="numeric"
+                        style={styles.mainInputFilds} placeholder="Data:__/__/__"
                             placeholderTextColor="#FFD246" />
                     </View>
 
@@ -40,19 +66,33 @@ function AchadosPedidos() {
                     <View>
                         <TextInput style={styles.mainInputText}
                             placeholder="Descrição"
+                            value={obs}
+                            onChangeText={setObs}
                             placeholderTextColor="#535353" />
                     </View>
                     <View>
-                        <TextInput style={styles.mainInputFild1} placeholder="Entregue em:__/__/__"
+                        <TextInput 
+                           value={entreguei}
+                           onChangeText={setEntreguei}
+                           keyboardType="numeric"
+                        style={styles.mainInputFild1} placeholder="Entregue em:__/__/__"
                             placeholderTextColor="#FFD246" />
                     </View>
                     <View>
-                        <TextInput style={styles.mainInputFild2} placeholder="Nome:"
+                        <TextInput 
+                           value={name}
+                           onChangeText={setName}
+                        style={styles.mainInputFild2} placeholder="Nome:"
                             placeholderTextColor="#FFD246" />
-                             <TextInput style={styles.mainInputFild2} placeholder="RG:"
+
+                             <TextInput 
+                                value={rg}
+                                onChangeText={setRg}
+                                keyboardType="numeric"
+                             style={styles.mainInputFild2} placeholder="RG:"
                             placeholderTextColor="#FFD246" />
                     </View>
-                    <TouchableOpacity style={styles.containerButton}>
+                    <TouchableOpacity  onPress={hadleNavigateToSalva} style={styles.containerButton}>
                         <Text style={styles.containerButtonText}>Salvar</Text>
                     </TouchableOpacity>
 

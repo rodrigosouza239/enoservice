@@ -1,9 +1,9 @@
-import React from 'react'
+import React,{useState}  from 'react'
 import { View,Text,Image,ImageBackground,TextInput,Platform,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { BorderlessButton } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
-
+import api from '../../service/api';
 
 
 
@@ -18,9 +18,30 @@ function RevisaoLancha(){
    const navigation = useNavigation();
    const { navigate } = useNavigation();
 
-   function hadleNavigateToAvarias(){
-      navigate('Avarias')
-      }
+   const [lancha, setLancha] = useState('')
+    const [date, setDate] = useState('')
+    const [hora, setHora] = useState('')
+    const [responsavel, setResponsavel] = useState('')
+    const [revisao, setRevisao] = useState('')
+    const [tecnico, setTecnico] = useState('')
+
+
+      async function hadleNavigateToSalva(){
+         const data ={
+            lancha,
+            date,
+            hora,
+            responsavel,
+            revisao,
+            tecnico,
+         };
+         try{
+             const response = await api.post('/revisaolancha',data);
+             navigation.navigate('Revisao')
+         } catch(err){
+             alert('Erro no cadastro, tente novamente.')
+         }
+         }
 
    
     return (
@@ -40,31 +61,49 @@ function RevisaoLancha(){
             </View>
             <View style={styles.main}>
                <Text style={styles.mainInputText}>Lancha:</Text>
-               <TextInput style={styles.mainInput1}/>
+               <TextInput 
+               value={lancha}
+               onChangeText={setLancha}
+               style={styles.mainInput1}/>
             </View>
             <View style={styles.main}>
                <Text style={styles.mainInputText}>Data da última revisão:</Text>
-               <TextInput style={styles.mainInput2}/>
+               <TextInput 
+               value={date}
+               onChangeText={setDate}
+               style={styles.mainInput2}/>
             </View>
             <View style={styles.main}>
                <Text style={styles.mainInputText}>Hora/Motor:</Text>
-               <TextInput style={styles.mainInput3}/>
+               <TextInput
+               value={hora}
+               onChangeText={setHora}
+               style={styles.mainInput3}/>
             </View>
             <View style={styles.main}>
                <Text style={styles.mainInputText}>Empresa Responsável:</Text>
-               <TextInput style={styles.mainInput4}/>
+               <TextInput 
+               value={responsavel}
+               onChangeText={setResponsavel}
+               style={styles.mainInput4}/>
             </View>
             <View style={styles.main}>
                <Text style={styles.mainInputText}>Próxima Revisão:</Text>
-               <TextInput style={styles.mainInput}/>
+               <TextInput
+               value={revisao}
+               onChangeText={setRevisao}
+               style={styles.mainInput}/>
             </View>
             <View style={styles.main}>
                <Text style={styles.mainInputText}>Técnico:</Text>
-               <TextInput style={styles.mainInput5}/>
+               <TextInput
+               value={tecnico}
+               onChangeText={setTecnico}
+               style={styles.mainInput5}/>
             </View>
 
             <View style={styles.mainpastas}>
-            <TouchableOpacity style={styles.mainInputButton} >
+            <TouchableOpacity onPress={hadleNavigateToSalva} style={styles.mainInputButton} >
                          <Text style={styles.mainInputButtonText}>Salvar</Text>
                      </TouchableOpacity>
             </View>

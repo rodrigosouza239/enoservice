@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import { View,Text,Image,ImageBackground,TextInput,Platform,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
+import api from  '../../service/api';
 
 import Backgroud from '../../assets/backgroudmenu.png';
 import styles from './styles';
@@ -12,15 +13,27 @@ import { useNavigation } from '@react-navigation/native';
 function AgendamentoPass(){
    const navigation = useNavigation();
    const { navigate } = useNavigation();
+
+   const [date, setDate] = useState('')
+   const [hora, setHora] = useState('')
+   const [obs, setObs] = useState('')
+
     
-   const [date, setDate] = useState(new Date(1598051730000));
-   const [mode, setMode] = useState('date');
-   const [show, setShow] = useState(false);
  
 
 
-    function hadleNavigateToSucesso(){
-        navigate('Sucesso')
+        async function hadleNavigateToSalva(){
+            const data = {
+                date,
+                hora,
+                obs
+              }
+           try{
+               const response = await api.post('/vessels/:vesselId/schedules',data);
+               navigation.navigate('Sucesso')
+           } catch(err){
+               alert('Erro no cadastro, tente novamente.')
+           }
         }
     return (
         <>
@@ -44,24 +57,33 @@ function AgendamentoPass(){
                          Data :
                      </Text>
                      
-                     <TextInput autoCompleteType="cc-exp-month"  style={styles.mainTextInput} />
+                     <TextInput 
+                     value={date}
+                     onChangeText={setDate}
+                     autoCompleteType="cc-exp-month"  style={styles.mainTextInput} />
                  </View>
 
                  <View style={styles.mainPageForm} >
                      <Text style={styles.mainText}>
                          Hora :
                      </Text>
-                     <TextInput style={styles.mainTextInput} />
+                     <TextInput
+                     value={hora}
+                     onChangeText={setHora}
+                     style={styles.mainTextInput} />
                  </View>
                  <Text style={styles.mainInputTextEsqueceuText}>*Agendamento com 2 dias de antecedência.</Text>
 
 
                  <View>
                      <Text style={styles.mainInputTextObs}  >Obs:</Text>
-                        <TextInput style={styles.mainInputText}
+                        <TextInput 
+                        value={obs}
+                        onChangeText={setObs}
+                        style={styles.mainInputText}
                             />
                     </View>
-                    <TouchableOpacity onPress={hadleNavigateToSucesso} style={styles.containerButton}>
+                    <TouchableOpacity onPress={hadleNavigateToSalva} style={styles.containerButton}>
                         <Text style={styles.containerButtonText}>Enviar</Text>
                     </TouchableOpacity>
            </View>

@@ -13,7 +13,7 @@ import Logo from '../../assets/logo.png';
     const { navigate } = useNavigation();
 
     function hadleNavigateToPageHome() {
-        navigate('Home')
+        navigate('EmbarcacaoList')
     }
     return (
         <>

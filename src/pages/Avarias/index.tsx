@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { View, Text, Image, ImageBackground, TextInput, Platform, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 import Backgroud from '../../assets/backgroudmenu.png';
@@ -6,12 +6,27 @@ import styles from './styles';
 import Logo from '../../assets/logo.png';
 import Pasta from '../../assets/Caminho46.png';
 import { Feather } from '@expo/vector-icons';
-import { BorderlessButton } from 'react-native-gesture-handler'
-import { useNavigation } from '@react-navigation/native'
+import { BorderlessButton } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+
+import api from  '../../service/api';
 
 
 function Avarias() {
     const navigation = useNavigation();
+    const [obs, setObs] = useState('')
+
+    async function hadleNavigateToSalva(){
+        const data = {
+           obs,
+          }
+       try{
+           const response = await api.post('/damaged',data);
+           navigation.navigate('DdEmbarcacao')
+       } catch(err){
+           alert('Erro no cadastro, tente novamente.')
+       }
+       }
     return (
         <>
             <ImageBackground style={styles.container} resizeMode="cover" source={Backgroud}>
@@ -35,9 +50,12 @@ function Avarias() {
                     <View>
                         <TextInput style={styles.mainInputText}
                             placeholder="Descrição"
-                            placeholderTextColor="#535353" />
+                            placeholderTextColor="#535353"
+                            value={obs}
+                            onChangeText={setObs}
+                            />
                     </View>
-                    <TouchableOpacity style={styles.containerButton}>
+                    <TouchableOpacity onPress={hadleNavigateToSalva} style={styles.containerButton}>
                         <Text style={styles.containerButtonText}>Salvar</Text>
                     </TouchableOpacity>
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { View,Text,Image,ImageBackground,TextInput,Platform,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 
 
@@ -11,9 +11,18 @@ import { Feather } from '@expo/vector-icons';
 import { BorderlessButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
+import api from '../../service/iugu';
+
 
 function Pagamentos(){
     const navigation = useNavigation();
+    const { navigate } = useNavigation();
+
+
+
+        function hadleNavigateToPagFatura(){
+            navigate('PagePag')
+            }
     return (
         <>
         <ImageBackground style={styles.container} resizeMode="cover" source={Backgroud}>
@@ -41,9 +50,9 @@ function Pagamentos(){
                     <Text>Vencimento</Text>
                     <Text>05/10/2020</Text>
                 </View>
-                 <View style={styles.containerPagametsItem} >
+                 <TouchableOpacity onPress={hadleNavigateToPagFatura}  style={styles.containerPagametsItem} >
                  <Text>Em atraso</Text>
-                 </View>
+                 </TouchableOpacity>
            </View>
 
                      <View style={styles.footer}>

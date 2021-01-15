@@ -51,7 +51,9 @@ function Home() {
     return (
         <>
             <ImageBackground style={styles.container} resizeMode="cover" source={Backgroud}>
-                {/* menu1 */}
+               
+                <View style={{marginTop:40}} >
+                     {/* menu1 */}
                 <View style={styles.Viewmenu}>
                     <TouchableOpacity style={styles.item} onPress={hadleNavigateToDdEmbarcacao}>
                         <Image source={Grupo56} />
@@ -99,6 +101,7 @@ function Home() {
                         <Image source={Grupo139} />
                         <Text style={styles.itemTitle}>Dados do Jet Ski</Text>
                     </TouchableOpacity>
+                </View>
                 </View>
                 <View style={styles.footer}>
                     <Image style={styles.footerImg} source={Logo} />

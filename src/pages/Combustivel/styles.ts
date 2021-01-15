@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         height:130,
-        top:200,
+        top:120,
       },
       footerImg:{
         width:133,

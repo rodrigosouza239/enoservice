@@ -38,7 +38,7 @@ function Transmissao() {
                         resizeMode="cover"
                         shouldPlay
                         isLooping
-                        style={{ width: 300, height: 330 }}
+                        style={{ width: 300, height: 220 }}
                     />
                 </View>
                 <View style={styles.footer}>
